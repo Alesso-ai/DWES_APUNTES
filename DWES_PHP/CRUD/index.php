@@ -121,4 +121,43 @@ function pizzaPrecio($conn, $precioFiltro){
 echo "<h2>Pizzas con precio igual a 10.00 euros</h2>";
 pizzaPrecio($conn, 10.00);
 
+
+
+
+echo "<h1>CREAR PIZZAS POR FORMULARIO</h1>";
+require_once("index.html");
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Recuperar datos del formulario
+    $nombre = $_POST["nombre"];
+    $coste = $_POST["coste"];
+    $precio = $_POST["precio"];
+    $ingredientes = $_POST["ingredientes"];
+
+    // Validar y procesar los datos (puedes agregar más validaciones según tus necesidades)
+
+    // Conectar a la base de datos
+    $cadena_conexion = 'mysql:dbname=dwes_t3;host=127.0.0.1';
+    $usuario = "root";
+    $clave = "";
+
+    // Insertar la pizza en la base de datos
+    $insertar = $conn->prepare("INSERT INTO pizza (nombre, coste, precio, ingredientes) VALUES (:nombre, :coste, :precio, :ingredientes)");
+
+    $insertar->bindParam(':nombre', $nombre);
+    $insertar->bindParam(':coste', $coste);
+    $insertar->bindParam(':precio', $precio);
+    $insertar->bindParam(':ingredientes', $ingredientes);
+
+    if ($insertar->execute()) {
+        echo "Pizza creada exitosamente.";
+    } else {
+        echo "Error al crear la pizza.";
+    }
+} 
+
+
+
+
 ?>

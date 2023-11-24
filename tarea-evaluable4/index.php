@@ -9,6 +9,8 @@
 <body>
     <?php
 
+    
+
     if (isset($err)) {
         echo "<p> Revise usuario y contraseña</p>";
     }
@@ -16,10 +18,10 @@
 
     // Verifica si hay un usuario logueado
     if (isset($_SESSION['usuario'])) {
-        echo "<p>Bienvenido, {$_SESSION['usuario']}! <a href='logout.php'>Cerrar sesión</a></p>";
+        echo "<p>Bienvenido, {$_SESSION['usuario']}! <a href='index.php'>Cerrar sesión</a></p>";
 
         // Verifica el rol del usuario
-        if ($_SESSION['rol'] == 'admin') {
+        if ($_SESSION['rol'] == '1') {
             echo "<h1>Panel de administración</h1>";
             echo "<p>Modifica precios, costes, etc.</p>";
             echo "<a href='zona_admin.php'>Crear nueva pizza</a>";
@@ -97,3 +99,5 @@ function comprobar_usuario($nombre, $clave)
 
 
 ?>
+
+

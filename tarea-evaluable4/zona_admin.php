@@ -1,19 +1,15 @@
 <?php
 
-//Funcion que llamaremos al principio del codigo para conectar a la base de datos.
-function conectarBD()
-{
-    $cadena_conexion = 'mysql:dbname=dwes_t3;host=127.0.0.1';
-    $usuario = "root";
-    $clave = "";
 
-    try {
-        $bd = new PDO($cadena_conexion, $usuario, $clave);
-        return $bd;
-    } catch (PDOException $e) {
-        return "Error conectando a la base de datos: " . $e->getMessage();
-    }
+session_start();
+
+// Verifica si el usuario está autenticado y tiene el rol de administrador
+if (!isset($_SESSION['usuario']) || $_SESSION['rol'] != '1') {
+    header("Location: index.php");
+    exit();
 }
+
+$conn = conectarBD();
 
 
 

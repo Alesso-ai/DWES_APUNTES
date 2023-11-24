@@ -1,24 +1,21 @@
 <?php
 
+function conectarDB(){
+    $cadena_conexion = 'mysql:dbname=dwes_t3;host=127.0.0.1';
+    $usuario = "root";
+    $clave = "";
 
-session_start();
-
-// Verifica si el usuario está autenticado y tiene el rol de administrador
-if (!isset($_SESSION['usuario']) || $_SESSION['rol'] != '1') {
-    header("Location: index.php");
-    exit();
+    // Variable $bd es un objeto PDO que contiene la conexión
+    try {
+        $bd = new PDO($cadena_conexion, $usuario, $clave);
+        return $bd;
+    } catch (PDOException $e) {
+        echo "Error de conexión a la BD" . $e->getMessage();
+    }
 }
+$conn = conectarDB();
 
-$conn = conectarBD();
-
-
-
-//Conectar bd
-$conn = conectarBD();
-
-//Hacer metodo para leer la tabla de pizzas
-function listarPizzas($conn)
-{
+function listarPizzas($conn){
     $consulta = $conn->prepare("SELECT nombre,precio FROM pizza");
     //la ejecutamos
     $consulta->execute();
@@ -55,31 +52,7 @@ $ingredientesPizza = "Tomate, Mozzarella, albahaca, Jamon, Parmesano";
 
 $insertar = $conn->prepare("INSERT INTO pizza (nombre, coste, precio, ingredientes) VALUES ('$nombrePizza', '$costePizzas', '$precioPizza', '$ingredientesPizza')");
 
-$insertar->execute();
-
-
-//Modificar pizza
-echo "<h1>Modificar Pizza</h1>";
-
-$nombrePizza = "Pizza modificada";
-$costePizzas = 6.00;
-$precioPizza = 15.00;
-$ingredientesPizza = "Tomate, Mozzarella, Champiñones";
-$nombreOriginal = "Pizza prueba";
-
-$modificar = $conn->prepare("UPDATE  pizza SET nombre = :nombre,
- coste = :coste, ingredientes = :ingredientes, 
- precio = :precio WHERE nombre = :nombreOriginal");
-
-$modificar->bindParam(':nombre', $nombrePizza);
-$modificar->bindParam(':coste', $costePizzas);
-$modificar->bindParam(':precio', $precioPizza);
-$modificar->bindParam(':ingredientes', $ingredientesPizza);
-$modificar->bindParam(':nombreOriginal', $nombreOriginal);
-
-$modificar->execute();
-
-listarPizzas($conn);
+//$insertar->execute();
 
 
 ?>

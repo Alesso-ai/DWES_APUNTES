@@ -9,7 +9,7 @@
 <body>
     <?php
 
-    
+
 
     if (isset($err)) {
         echo "<p> Revise usuario y contraseña</p>";
@@ -53,8 +53,7 @@
 <?php
 
 
-function conectarDB()
-{
+function conectarDB(){
     // Conectar a la base de datos con el puerto, usuario y clave
     $cadena_conexion = 'mysql:dbname=dwes_t3;host=127.0.0.1';
     $usuario = "root";
@@ -77,21 +76,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $err = TRUE;
     } else {
         session_start();
-        $_SESSION["usuario"] = $_POST["usuario"];
-        header("Location: pedido.php");
+        $_SESSION["usuario"] = $usu["usuario"];
+        $_SESSION["rol"] = $usu["rol"];
+        $_SESSION["nombre"] = $usu["nombre"];
+        // Verifica el rol del usuario
+        if ($_SESSION['rol'] == '1') {
+            header("Location:zona_admin.php");
+        } else {
+            header("Location:pedido.php");
+        }
     }
 }
 
 // Recibimos nombre y clave y lo usamos para hacer una consulta a la base de datos
-function comprobar_usuario($nombre, $clave)
-{
+function comprobar_usuario($nombre, $clave){
     $conn = conectarDB();
-    $consulta = $conn->prepare("SELECT usuario, rol FROM USUARIOS WHERE usuario = '$nombre' AND clave = '$clave'");
+    $consulta = $conn->prepare("SELECT usuario,nombre,rol FROM USUARIOS WHERE usuario = '$nombre' AND clave = '$clave'");
     $consulta->execute();
 
     if ($consulta->rowCount() > 0) {
         $row = $consulta->fetch(PDO::FETCH_ASSOC);
-        return array("nombre" => $row["usuario"], "rol" => $row["rol"]);
+        return array("usuario" => $row["usuario"], "rol" => $row["rol"], "nombre" => $row["nombre"]);
     } else {
         return FALSE;
     }
@@ -99,5 +104,3 @@ function comprobar_usuario($nombre, $clave)
 
 
 ?>
-
-

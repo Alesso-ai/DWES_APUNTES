@@ -1,6 +1,7 @@
 <?php
 
-function conectarDB(){
+function conectarDB()
+{
     $cadena_conexion = 'mysql:dbname=dwes_t3;host=127.0.0.1';
     $usuario = "root";
     $clave = "";
@@ -21,7 +22,8 @@ $conn = conectarDB();
 
 
 // Función para listar pizzas, ahora acepta la conexión como parámetro
-function listarPizzas($conn){
+function listarPizzas($conn)
+{
     $consulta = $conn->prepare("SELECT nombre, precio FROM pizza");
     // La ejecutamos
     $consulta->execute();
@@ -49,14 +51,14 @@ $conn = conectarDB();
 
 <body>
     <?php
-                session_start();
-                if(isset($_SESSION["nombre"])){
-                    echo "<h2>Bienvenido " .$_SESSION["nombre"]."</h2>";
-                }
-                echo "<h1>Nuestras Pizzas</h1>";
-                listarPizzas($conn);
+    session_start();
+    if (isset($_SESSION["nombre"])) {
+        echo "<h2>Bienvenido " . $_SESSION["nombre"] . "</h2>";
+    }
+    echo "<h1>Nuestras Pizzas</h1>";
+    listarPizzas($conn);
     ?>
-                
+
 </body>
 
 </html>

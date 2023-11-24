@@ -5,7 +5,7 @@ function conectarDB(){
     $usuario = "root";
     $clave = "";
 
-    // Variable $bd es un objeto PDO que contiene la conexión
+
     try {
         $bd = new PDO($cadena_conexion, $usuario, $clave);
         return $bd;
@@ -17,45 +17,46 @@ $conn = conectarDB();
 
 function listarPizzas($conn){
     $consulta = $conn->prepare("SELECT nombre,precio FROM pizza");
-    //la ejecutamos
+
     $consulta->execute();
 
-    //La imprimimos por pantalla
+
     foreach ($consulta->fetchAll(PDO::FETCH_ASSOC) as $row) {
         echo $row["nombre"] . "." . $row["precio"] . "€.<br>";
     }
 }
-echo "<h1>Nuestas Pizzas</h1>";
-listarPizzas($conn);
 
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    
+    // Conecta a la base de datos
+    $conn = conectarDB();
 
-//INSERTAR NUEVA PIZA
-echo "<h1>Nuestas Pizzas</h1>";
-listarPizzas($conn);
-$nombrePizza = "Pizza prueba";
-$costePizzas = 5.00;
-$precioPizza = 10.00;
-$ingredientesPizza = "Tomate, Mozzarella, albahaca, Jamon, Parmesano";
+    // Recoge los datos del formulario
+    $nombre = $_POST["nombre"];
+    $coste = $_POST["coste"];
+    $precio = $_POST["precio"];
+    $ingredientes = $_POST["ingredientes"];
 
-$insertar = $conn->prepare("INSERT INTO pizza (nombre, coste, precio, ingredientes) VALUES ('$nombrePizza', '$costePizzas', '$precioPizza', '$ingredientesPizza')");
+    // Prepara la consulta SQL para insertar una nueva pizza
+    $consulta = $conn->prepare("INSERT INTO pizza (nombre, coste, precio, ingredientes) VALUES (:nombre, :coste, :precio, :ingredientes)");
 
-$insertar->bindParam(':nombre', $nombrePizza);
-$insertar->bindParam(':coste', $costePizzas);
-$insertar->bindParam(':precio', $precioPizza);
-$insertar->bindParam(':ingredientes', $ingredientesPizza);
+    // Asocia los parámetros
+    $consulta->bindParam(':nombre', $nombre);
+    $consulta->bindParam(':coste', $coste);
+    $consulta->bindParam(':precio', $precio);
+    $consulta->bindParam(':ingredientes', $ingredientes);
 
-$nombrePizza = "Pizza prueba";
-$costePizzas = 5.00;
-$precioPizza = 10.00;
-$ingredientesPizza = "Tomate, Mozzarella, albahaca, Jamon, Parmesano";
+    // Ejecuta la consulta
+    $consulta->execute();
+    header("Location: " . $_SERVER["PHP_SELF"]);
+    exit();
 
-$insertar = $conn->prepare("INSERT INTO pizza (nombre, coste, precio, ingredientes) VALUES ('$nombrePizza', '$costePizzas', '$precioPizza', '$ingredientesPizza')");
-
-//$insertar->execute();
+}
 
 
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -66,8 +67,12 @@ $insertar = $conn->prepare("INSERT INTO pizza (nombre, coste, precio, ingredient
 </head>
 
 <body>
+    <?php
+    echo "<h1>Nuestas Pizzas</h1>";
+    listarPizzas($conn);
+    ?>
     <h1>Personaliza tu Pizza</h1>
-    <form action="procesar_pizza.php" method="post">
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) ?>" method ="POST">
         <label for="nombre">Nombre de la Pizza:</label>
         <input type="text" id="nombre" name="nombre" required><br>
 

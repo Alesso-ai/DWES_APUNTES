@@ -46,6 +46,8 @@
         echo "</form>";
     }
     ?>
+    <br>
+    <a href="nuevo_usuario.php">Regristrarse</a>
 </body>
 
 </html>
@@ -53,8 +55,7 @@
 <?php
 
 
-function conectarDB()
-{
+function conectarDB(){
     // Conectar a la base de datos con el puerto, usuario y clave
     $cadena_conexion = 'mysql:dbname=dwes_t3;host=127.0.0.1';
     $usuario = "root";
@@ -90,8 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Recibimos nombre y clave y lo usamos para hacer una consulta a la base de datos
-function comprobar_usuario($nombre, $clave)
-{
+function comprobar_usuario($nombre, $clave){
     $conn = conectarDB();
     $consulta = $conn->prepare("SELECT usuario,nombre,rol FROM USUARIOS WHERE usuario = '$nombre' AND clave = '$clave'");
     $consulta->execute();

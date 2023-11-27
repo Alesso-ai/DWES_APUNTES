@@ -12,36 +12,25 @@ function conectarDB()
         echo "Error de conexión a la BD" . $e->getMessage();
     }
 }
+
 $conn = conectarDB();
 
-
-
-
-
-
-
-
 // Función para listar pizzas, ahora acepta la conexión como parámetro
-function listarPizzas($conn)
-{
+function listarPizzas($conn){
     $consulta = $conn->prepare("SELECT nombre, precio FROM pizza");
-    // La ejecutamos
     $consulta->execute();
 
-    // La imprimimos por pantalla
     foreach ($consulta->fetchAll(PDO::FETCH_ASSOC) as $row) {
         echo $row["nombre"] . "-->" . $row["precio"] . "€.<br>";
     }
 }
 
-$conn = conectarDB();
+session_start();
 
 ?>
 
-
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -51,7 +40,6 @@ $conn = conectarDB();
 
 <body>
     <?php
-    session_start();
     if (isset($_SESSION["nombre"])) {
         echo "<h2>Bienvenido " . $_SESSION["nombre"] . "</h2>";
     }
@@ -59,6 +47,26 @@ $conn = conectarDB();
     listarPizzas($conn);
     ?>
 
+    <h2>Realizar Pedido</h2>
+    <form action="gracias.php" method="POST">
+        <label for="pizza">Selecciona una pizza:</label>
+        <select name="pizza" id="pizza">
+            <?php
+            $consulta = $conn->prepare("SELECT nombre FROM pizza");
+            $consulta->execute();
+
+            foreach ($consulta->fetchAll(PDO::FETCH_ASSOC) as $row) {
+                echo "<option value='" . $row["nombre"] . "'>" . $row["nombre"] . "</option>";
+            }
+            ?>
+        </select>
+
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" name="cantidad" value="1" min="1">
+
+        <br>
+        <input type="submit" value="Añadir al Pedido">
+    </form>
 </body>
 
 </html>

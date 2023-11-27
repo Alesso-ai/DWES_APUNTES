@@ -1,6 +1,7 @@
 <?php
 
-function conectarDB(){
+function conectarDB()
+{
     $cadena_conexion = 'mysql:dbname=dwes_t3;host=127.0.0.1';
     $usuario = "root";
     $clave = "";
@@ -15,7 +16,8 @@ function conectarDB(){
 }
 $conn = conectarDB();
 
-function listarPizzas($conn){
+function listarPizzas($conn)
+{
     $consulta = $conn->prepare("SELECT nombre,precio FROM pizza");
 
     $consulta->execute();
@@ -28,7 +30,7 @@ function listarPizzas($conn){
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    
+
     // Conecta a la base de datos
     $conn = conectarDB();
 
@@ -51,8 +53,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $consulta->execute();
     header("Location: " . $_SERVER["PHP_SELF"]);
     exit();
-
 }
+
+
 
 
 ?>
@@ -72,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     listarPizzas($conn);
     ?>
     <h1>Personaliza tu Pizza</h1>
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) ?>" method ="POST">
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) ?>" method="POST">
         <label for="nombre">Nombre de la Pizza:</label>
         <input type="text" id="nombre" name="nombre" required><br>
 
@@ -87,6 +90,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <input type="submit" value="Crear Pizza">
     </form>
+    <label for="pizza">Selecciona una pizza (si deseas modificar):</label>
+    <select name="pizza" id="pizza">
+        <option value="">Nueva Pizza</option>
+        <?php
+        $consultaPizzas = $conn->prepare("SELECT id, nombre FROM pizza");
+        $consultaPizzas->execute();
+
+        foreach ($consultaPizzas->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            echo "<option value='" . $row["id"] . "'>" . $row["nombre"] . "</option>";
+        }
+        ?>
+    </select>
+
+    <h2>Borrar Pizza</h2>
+    <form action="borrar_pizza.php" method="POST">
+        <label for="pizza_borrar">Selecciona una pizza para borrar:</label>
+        <select name="pizza_borrar" id="pizza_borrar">
+            <?php
+            foreach ($consultaPizzas->fetchAll(PDO::FETCH_ASSOC) as $row) {
+                echo "<option value='" . $row["id"] . "'>" . $row["nombre"] . "</option>";
+            }
+            ?>
+        </select>
+        <input type="submit" value="Borrar Pizza">
+    </form>
+
+    <form action="cerrar_sesion.php" method="POST">
+        <input type="submit" value="Cerrar Sesión">
+    </form>
+
 </body>
 
 </html>

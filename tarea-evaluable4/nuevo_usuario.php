@@ -6,7 +6,6 @@ function conectarDB()
     $usuario = "root";
     $clave = "";
 
-
     try {
         $bd = new PDO($cadena_conexion, $usuario, $clave);
         return $bd;
@@ -15,9 +14,16 @@ function conectarDB()
     }
 }
 
+//Metodo para comprobar si existe dicho usuario
+function usuarioExiste($conn, $usuario){
+    $consulta = $conn->prepare("SELECT COUNT(*) FROM usuarios WHERE usuario = :usuario");
+    $consulta->bindParam(':usuario', $usuario);
+    $consulta->execute();
+    $resultado = $consulta->fetchColumn();
+    return $resultado > 0;
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
     // Conecta a la base de datos
     $conn = conectarDB();
 
@@ -28,30 +34,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $correo = $_POST["correo"];
     $rol = 2;
 
+    // Verificar si el usuario ya existe
+    if (usuarioExiste($conn, $usuario)) {
+        echo "El nombre de usuario ya existe. Por favor, elija otro.";
+    } else {
+        // Insertar nuevo usuario
+        $consulta = $conn->prepare("INSERT INTO usuarios (usuario, nombre, clave, correo,rol) VALUES (:usuario, :nombre, :clave, :correo, :rol)");
 
-    $consulta = $conn->prepare("INSERT INTO usuarios (usuario, nombre, clave, correo,rol) VALUES (:usuario, :nombre, :clave, :correo, :rol)");
+        // Asocia los parámetros
+        $consulta->bindParam(':usuario', $usuario);
+        $consulta->bindParam(':nombre', $nombre);
+        $consulta->bindParam(':clave', $clave);
+        $consulta->bindParam(':correo', $correo);
+        $consulta->bindParam(':rol', $rol);
 
-    // Asocia los parámetros
-    $consulta->bindParam(':usuario', $usuario);
-    $consulta->bindParam(':nombre', $nombre);
-    $consulta->bindParam(':clave', $clave);
-    $consulta->bindParam(':correo', $correo);
-    $consulta->bindParam(':rol', $rol);
-
-    // Ejecuta la consulta
-    try {
-        $consulta->execute();
-        session_start();
-        $_SESSION['usuario'] = $usuario;
-        $_SESSION['rol'] = $rol;
-        $_SESSION['nombre'] = $nombre;
-        header('Location: pedido.php');
-    } catch (PDOException $e) {
-        echo "Error al crear el usuario: " . $e->getMessage();
+        // Ejecuta la consulta
+        try {
+            $consulta->execute();
+            session_start();
+            $_SESSION['usuario'] = $usuario;
+            $_SESSION['rol'] = $rol;
+            $_SESSION['nombre'] = $nombre;
+            header('Location: pedido.php');
+        } catch (PDOException $e) {
+            echo "Error al crear el usuario: " . $e->getMessage();
+        }
     }
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -66,7 +75,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <?php
     echo "<h1>Registro de usuario</h1>";
-
     ?>
     <h1>Personaliza tu Pizza</h1>
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) ?>" method="POST">

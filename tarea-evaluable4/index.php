@@ -42,7 +42,7 @@
         echo "<input value='" . (isset($usuario) ? $usuario : '') . "' name='usuario' type='text'>";
         echo "<label for='clave'>Clave</label>";
         echo "<input name='clave' type='password'>";
-        echo "<input type='submit'>";
+        echo "<input type='submit' value='Iniciar Sesion'>";
         echo "</form>";
     }
     ?>

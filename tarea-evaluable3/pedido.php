@@ -16,7 +16,8 @@ function conectarDB()
 $conn = conectarDB();
 
 // Función para listar pizzas, ahora acepta la conexión como parámetro
-function listarPizzas($conn){
+function listarPizzas($conn)
+{
     $consulta = $conn->prepare("SELECT nombre, precio FROM pizza");
     $consulta->execute();
 
@@ -67,6 +68,11 @@ session_start();
         <br>
         <input type="submit" value="Añadir al Pedido">
     </form>
+    <br>
+    <form action="index.php" method="POST">
+        <input type="submit" value="Cerrar Sesión">
+    </form>
+
 </body>
 
 </html>

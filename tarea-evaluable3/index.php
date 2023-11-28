@@ -55,7 +55,8 @@
 <?php
 
 
-function conectarDB(){
+function conectarDB()
+{
     // Conectar a la base de datos con el puerto, usuario y clave
     $cadena_conexion = 'mysql:dbname=dwes_t3;host=127.0.0.1';
     $usuario = "root";
@@ -73,7 +74,8 @@ function conectarDB(){
 //comprobar usuario a traves de un get o un post
 //get formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $usu = comprobar_usuario($_POST["usuario"], $_POST["clave"]);
+
+    $usu = isset($_POST["usuario"]) && isset($_POST["clave"]) ? comprobar_usuario($_POST["usuario"], $_POST["clave"]) : FALSE;
     if ($usu == FALSE) {
         $err = TRUE;
     } else {
@@ -91,7 +93,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Recibimos nombre y clave y lo usamos para hacer una consulta a la base de datos
-function comprobar_usuario($nombre, $clave){
+function comprobar_usuario($nombre, $clave)
+{
+
     $conn = conectarDB();
     $consulta = $conn->prepare("SELECT usuario,nombre,rol FROM USUARIOS WHERE usuario = '$nombre' AND clave = '$clave'");
     $consulta->execute();
@@ -103,6 +107,7 @@ function comprobar_usuario($nombre, $clave){
         return FALSE;
     }
 }
+
 
 
 ?>

@@ -66,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Pizza</title>
+    <title>Zona Admin</title>
 </head>
 
 <body>
@@ -108,15 +108,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label for="pizza_borrar">Selecciona una pizza para borrar:</label>
         <select name="pizza_borrar" id="pizza_borrar">
             <?php
+            $consultaPizzas = $conn->prepare("SELECT id, nombre FROM pizza");
+            $consultaPizzas->execute();
+
             foreach ($consultaPizzas->fetchAll(PDO::FETCH_ASSOC) as $row) {
                 echo "<option value='" . $row["id"] . "'>" . $row["nombre"] . "</option>";
             }
+
             ?>
         </select>
         <input type="submit" value="Borrar Pizza">
     </form>
 
-    <form action="cerrar_sesion.php" method="POST">
+    <form action="index.php" method="POST">
         <input type="submit" value="Cerrar Sesión">
     </form>
 

@@ -6,7 +6,6 @@ function conectarDB()
     $usuario = "root";
     $clave = "";
 
-
     try {
         $bd = new PDO($cadena_conexion, $usuario, $clave);
         return $bd;
@@ -14,26 +13,24 @@ function conectarDB()
         echo "Error de conexión a la BD" . $e->getMessage();
     }
 }
+
 $conn = conectarDB();
 
 function listarPizzas($conn)
 {
-    $consulta = $conn->prepare("SELECT nombre,precio FROM pizza");
-
+    $consulta = $conn->prepare("SELECT nombre, precio FROM pizza");
     $consulta->execute();
-
 
     foreach ($consulta->fetchAll(PDO::FETCH_ASSOC) as $row) {
         echo $row["nombre"] . "." . $row["precio"] . "€.<br>";
     }
 }
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    //conecta a la base de datos
+    // Conecta a la base de datos
     $conn = conectarDB();
 
-    //verifica si se esta borrando una pizza
+    // Verifica si se está borrando una pizza
     if (isset($_POST["borrar_pizza"]) && !empty($_POST["pizza_borrar"])) {
         $pizza_id = $_POST["pizza_borrar"];
 
@@ -44,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    //recoge los datos del formulario
+    // Recoge los datos del formulario
     $nombre = $_POST["nombre"];
     $coste = $_POST["coste"];
     $precio = $_POST["precio"];
@@ -52,35 +49,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $pizza_id = $_POST["pizza"];
 
     if (!empty($nombre) && isset($coste) && isset($precio) && !empty($ingredientes)) {
-        //si hay una pizza seleccionada desde el desplegable, actualiza en lugar de insertar
+        // Si hay una pizza seleccionada desde el desplegable, actualiza en lugar de insertar
         if (!empty($pizza_id)) {
             $consulta_actualizar = $conn->prepare("UPDATE pizza SET nombre = :nombre, coste = :coste, precio = :precio, ingredientes = :ingredientes WHERE id = :pizza_id");
             $consulta_actualizar->bindParam(':pizza_id', $pizza_id);
         } else {
-            //si no hay una pizza seleccionada, inserta una nueva
+            // Si no hay una pizza seleccionada, inserta una nueva
             $consulta_actualizar = $conn->prepare("INSERT INTO pizza (nombre, coste, precio, ingredientes) VALUES (:nombre, :coste, :precio, :ingredientes)");
         }
 
+        // Obtiene la información de la pizza seleccionada
         if (!empty($pizza_id)) {
             $consultaPizza = $conn->prepare("SELECT nombre, coste, precio, ingredientes FROM pizza WHERE id = :pizza_id");
             $consultaPizza->bindParam(':pizza_id', $pizza_id);
             $consultaPizza->execute();
             $pizzaDatos = $consultaPizza->fetch(PDO::FETCH_ASSOC);
 
-            //rellena los campos del formulario con los datos de la pizza seleccionada
+            // Rellena los campos del formulario con los datos de la pizza seleccionada
             $_POST["nombre"] = $pizzaDatos['nombre'];
             $_POST["coste"] = $pizzaDatos['coste'];
             $_POST["precio"] = $pizzaDatos['precio'];
             $_POST["ingredientes"] = $pizzaDatos['ingredientes'];
         }
 
-        //asocia los parámetros
+        // Asocia los parámetros
         $consulta_actualizar->bindParam(':nombre', $nombre);
         $consulta_actualizar->bindParam(':coste', $coste);
         $consulta_actualizar->bindParam(':precio', $precio);
         $consulta_actualizar->bindParam(':ingredientes', $ingredientes);
 
-        //ejecuta la consulta
+        // Ejecuta la consulta
         $consulta_actualizar->execute();
         header("Location: " . $_SERVER["PHP_SELF"]);
         exit();
@@ -98,18 +96,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
-    <?php
-    echo "<h1>Nuestas Pizzas</h1>";
-    listarPizzas($conn);
-    ?>
+    <h1>Nuestras Pizzas</h1>
+    <?php listarPizzas($conn); ?>
+
     <h1>Personaliza tu Pizza</h1>
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) ?>" method="POST">
-
-
         <?php
         $pizzaSeleccionada = isset($_POST['pizza']) ? $_POST['pizza'] : '';
 
-        //obtiene la información de la pizza seleccionada
+        // Obtiene la información de la pizza seleccionada
         if (!empty($pizzaSeleccionada)) {
             $consultaPizza = $conn->prepare("SELECT nombre, coste, precio, ingredientes FROM pizza WHERE id = :pizza_id");
             $consultaPizza->bindParam(':pizza_id', $pizzaSeleccionada);
@@ -131,21 +126,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <textarea id="ingredientes" name="ingredientes" required><?php echo isset($pizzaDatos['ingredientes']) ? $pizzaDatos['ingredientes'] : ''; ?></textarea><br>
 
         <input type="submit" value="Crear/Actualizar Pizza">
-
-
-
-        <label for="pizza">Selecciona una pizza (si deseas modificar):</label>
-        <select name="pizza" id="pizza" onchange="document.getElementById('pizzaForm').submit()">
-            <option value="">Nueva Pizza</option>
-            <?php
-            $consultaPizzas = $conn->prepare("SELECT id, nombre, coste, precio, ingredientes FROM pizza");
-            $consultaPizzas->execute();
-
-            foreach ($consultaPizzas->fetchAll(PDO::FETCH_ASSOC) as $row) {
-                echo "<option value='" . $row["id"] . "'>" . $row["nombre"] . "</option>";
-            }
-            ?>
-        </select>
     </form>
 
     <h2>Borrar Pizza</h2>
@@ -163,11 +143,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </select>
         <input type="submit" name="borrar_pizza" value="Borrar Pizza">
     </form>
-    <br>
+
     <form action="index.php" method="POST">
         <input type="submit" value="Cerrar Sesión">
     </form>
-
 </body>
 
 </html>

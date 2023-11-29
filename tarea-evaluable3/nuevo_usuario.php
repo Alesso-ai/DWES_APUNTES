@@ -76,10 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
-    <?php
-    echo "<h1>Registro de usuario</h1>";
-    ?>
-    <h1>Personaliza tu Pizza</h1>
+    <h1>Registro de Usuario</h1>
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) ?>" method="POST">
         <label for="usuario">Usuario:</label>
         <input type="text" name="usuario" required><br>

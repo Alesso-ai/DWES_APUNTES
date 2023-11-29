@@ -22,7 +22,7 @@ function listarPizzas($conn)
     $consulta->execute();
 
     foreach ($consulta->fetchAll(PDO::FETCH_ASSOC) as $row) {
-        echo $row["nombre"] . "-->" . $row["precio"] . "€.<br>";
+        echo $row["nombre"] . "➞" . $row["precio"] . "€.<br>";
     }
 }
 

@@ -15,7 +15,8 @@ function conectarDB()
 }
 
 //Metodo para comprobar si existe dicho usuario
-function usuarioExiste($conn, $usuario){
+function usuarioExiste($conn, $usuario)
+{
     $consulta = $conn->prepare("SELECT COUNT(*) FROM usuarios WHERE usuario = :usuario");
     $consulta->bindParam(':usuario', $usuario);
     $consulta->execute();
@@ -70,6 +71,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Pizza</title>
+    <link rel="stylesheet" href="../tarea-evaluable3/styles/nuevo_usuario.css">
+
 </head>
 
 <body>

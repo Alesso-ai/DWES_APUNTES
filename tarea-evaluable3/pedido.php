@@ -37,42 +37,46 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pedidos</title>
+    <link rel="stylesheet" href="../tarea-evaluable3/styles/pedido.css">
 </head>
 
 <body>
-    <?php
-    if (isset($_SESSION["nombre"])) {
-        echo "<h2>Bienvenido " . $_SESSION["nombre"] . "</h2>";
-    }
-    echo "<h1>Nuestras Pizzas</h1>";
-    listarPizzas($conn);
-    ?>
+    <div class="container">
+        <?php
+        if (isset($_SESSION["nombre"])) {
+            echo "<div class='welcome'><h2>Bienvenido " . $_SESSION["nombre"] . "</h2></div>";
+        }
+        echo "<h1>Nuestras Pizzas</h1>";
+        echo "<ul class='pizza-list'>";
+        listarPizzas($conn);
+        echo "</ul>";
+        ?>
 
-    <h2>Realizar Pedido</h2>
-    <form action="gracias.php" method="POST">
-        <label for="pizza">Selecciona una pizza:</label>
-        <select name="pizza" id="pizza">
-            <?php
-            $consulta = $conn->prepare("SELECT nombre FROM pizza");
-            $consulta->execute();
+        <h2>Realizar Pedido</h2>
+        <form class="form-container" action="gracias.php" method="POST">
+            <label for="pizza">Selecciona una pizza:</label>
+            <select name="pizza" id="pizza">
+                <?php
+                $consulta = $conn->prepare("SELECT nombre FROM pizza");
+                $consulta->execute();
 
-            foreach ($consulta->fetchAll(PDO::FETCH_ASSOC) as $row) {
-                echo "<option value='" . $row["nombre"] . "'>" . $row["nombre"] . "</option>";
-            }
-            ?>
-        </select>
+                foreach ($consulta->fetchAll(PDO::FETCH_ASSOC) as $row) {
+                    echo "<option value='" . $row["nombre"] . "'>" . $row["nombre"] . "</option>";
+                }
+                ?>
+            </select>
 
-        <label for="cantidad">Cantidad:</label>
-        <input type="number" name="cantidad" value="1" min="1">
+            <label for="cantidad">Cantidad:</label>
+            <input type="number" name="cantidad" value="1" min="1">
 
+            <br>
+            <input type="submit" value="Añadir al Pedido">
+        </form>
         <br>
-        <input type="submit" value="Añadir al Pedido">
-    </form>
-    <br>
-    <form action="index.php" method="POST">
-        <input type="submit" value="Cerrar Sesión">
-    </form>
-
+        <form class="logout-form" action="index.php" method="POST">
+            <input type="submit" value="Cerrar Sesión">
+        </form>
+    </div>
 </body>
 
 </html>

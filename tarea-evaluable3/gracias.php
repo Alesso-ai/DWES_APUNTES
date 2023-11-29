@@ -16,6 +16,8 @@ if (isset($_SESSION["nombre"])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pedido</title>
+    <link rel="stylesheet" href="../tarea-evaluable3/styles/gracias.css">
+
 </head>
 
 <body>

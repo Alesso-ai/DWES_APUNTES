@@ -93,6 +93,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zona Admin</title>
+    <link rel="stylesheet" href="../tarea-evaluable3/styles/zona_admin.css">
+    
 </head>
 
 <body>

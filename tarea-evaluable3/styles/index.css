@@ -37,3 +37,36 @@ form input[type="submit"] {
   box-sizing: border-box; /* Esto evita que el padding agregue al ancho total */
 }
 
+h1{
+  display: block;
+  text-align: center;
+  color: #333;
+  padding: 10px;
+}
+
+h3{
+  display: block;
+  text-align: center;
+  color: #333;
+  padding: 10px;
+}
+
+a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #333;
+  padding: 10px;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  margin: 10%;
+  max-width: 300px; 
+  margin: 0 auto; 
+}
+
+a:hover {
+  background-color: #15c833;
+}

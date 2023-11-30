@@ -26,7 +26,7 @@ if (isset($_SESSION["nombre"])) {
     <form action="pedido.php" method="POST">
         <input type="submit" value="Volver al menú de pedidos">
     </form>
-
+    <img src="../tarea-evaluable3/assets/imgs/Mario.png" alt="Imagen de Mario Bros" title="Mario">
 </body>
 
 </html>

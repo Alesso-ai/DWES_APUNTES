@@ -46,37 +46,47 @@ session_start();
         if (isset($_SESSION["nombre"])) {
             echo "<div class='welcome'><h2>Bienvenido " . $_SESSION["nombre"] . "</h2></div>";
         }
+        echo "<div class='content'>";
+        echo "<div class='pizza-list'>";
         echo "<h1>Nuestras Pizzas</h1>";
-        echo "<ul class='pizza-list'>";
+        echo "<ul>";
         listarPizzas($conn);
         echo "</ul>";
+        echo "</div>";
+
         ?>
-
-        <h2>Realizar Pedido</h2>
-        <form class="form-container" action="gracias.php" method="POST">
-            <label for="pizza">Selecciona una pizza:</label>
-            <select name="pizza" id="pizza">
-                <?php
-                $consulta = $conn->prepare("SELECT nombre FROM pizza");
-                $consulta->execute();
-
-                foreach ($consulta->fetchAll(PDO::FETCH_ASSOC) as $row) {
-                    echo "<option value='" . $row["nombre"] . "'>" . $row["nombre"] . "</option>";
-                }
-                ?>
-            </select>
-
-            <label for="cantidad">Cantidad:</label>
-            <input type="number" name="cantidad" value="1" min="1">
-
-            <br>
-            <input type="submit" value="Añadir al Pedido">
-        </form>
-        <br>
-        <form class="logout-form" action="index.php" method="POST">
-            <input type="submit" value="Cerrar Sesión">
-        </form>
+        <div class="video-container">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/dXx_4n217Js?autoplay=1" frameborder="0" allowfullscreen></iframe>
+        </div>
     </div>
+
+    <h2>Realizar Pedido</h2>
+    <form class="form-container" action="gracias.php" method="POST">
+        <label for="pizza">Selecciona una pizza:</label>
+        <select name="pizza" id="pizza">
+            <?php
+            $consulta = $conn->prepare("SELECT nombre FROM pizza");
+            $consulta->execute();
+
+            foreach ($consulta->fetchAll(PDO::FETCH_ASSOC) as $row) {
+                echo "<option value='" . $row["nombre"] . "'>" . $row["nombre"] . "</option>";
+            }
+            ?>
+        </select>
+
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" name="cantidad" value="1" min="1">
+
+        <br>
+        <input type="submit" value="Añadir al Pedido">
+    </form>
+
+    <br>
+    <form class="logout-form" action="index.php" method="POST">
+        <input type="submit" value="Cerrar Sesión">
+    </form>
+    </div>
+
 </body>
 
 </html>

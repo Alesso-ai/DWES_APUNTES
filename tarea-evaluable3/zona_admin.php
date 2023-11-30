@@ -94,7 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zona Admin</title>
     <link rel="stylesheet" href="../tarea-evaluable3/styles/zona_admin.css">
-    
+
 </head>
 
 <body>
@@ -149,6 +149,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <form action="index.php" method="POST">
         <input type="submit" value="Cerrar Sesión">
     </form>
+
+    <div class="imagen-pizza">
+        <img src="../tarea-evaluable3/assets/imgs/Pizza.png" alt="Pizza" class="rotating-pizza">
+
+    </div>
 </body>
 
 </html>

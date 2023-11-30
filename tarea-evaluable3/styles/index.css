@@ -7,8 +7,8 @@ form {
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  max-width: 400px; /* Ajusta el ancho máximo del formulario según tus preferencias */
-  margin: 0 auto; /* Centra el formulario horizontalmente */
+  max-width: 400px;
+  margin: 0 auto;
 }
 
 form label {
@@ -18,8 +18,8 @@ form label {
 
 form input[type="text"],
 form input[type="password"] {
-  width: 100%; /* Puedes ajustar esto según tus preferencias */
-  box-sizing: border-box; /* Esto evita que el padding agregue al ancho total */
+  width: 100%;
+  box-sizing: border-box;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 3px;
@@ -33,8 +33,8 @@ form input[type="submit"] {
   border: none;
   border-radius: 3px;
   cursor: pointer;
-  width: 100%; /* Ajusta esto según tus preferencias */
-  box-sizing: border-box; /* Esto evita que el padding agregue al ancho total */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 h1{

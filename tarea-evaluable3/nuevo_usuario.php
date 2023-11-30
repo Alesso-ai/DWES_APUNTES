@@ -14,7 +14,6 @@ function conectarDB()
     }
 }
 
-//Metodo para comprobar si existe dicho usuario
 function usuarioExiste($conn, $usuario)
 {
     $consulta = $conn->prepare("SELECT COUNT(*) FROM usuarios WHERE usuario = :usuario");
@@ -25,31 +24,23 @@ function usuarioExiste($conn, $usuario)
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Conecta a la base de datos
     $conn = conectarDB();
-
-    // Recoge los datos del formulario
     $usuario = $_POST["usuario"];
     $nombre = $_POST["nombre"];
     $clave = $_POST["clave"];
     $correo = $_POST["correo"];
     $rol = 2;
 
-    // Verificar si el usuario ya existe
     if (usuarioExiste($conn, $usuario)) {
         echo "El nombre de usuario ya existe. Por favor, elija otro.";
     } else {
-        // Insertar nuevo usuario
         $consulta = $conn->prepare("INSERT INTO usuarios (usuario, nombre, clave, correo,rol) VALUES (:usuario, :nombre, :clave, :correo, :rol)");
-
-        // Asocia los parámetros
         $consulta->bindParam(':usuario', $usuario);
         $consulta->bindParam(':nombre', $nombre);
         $consulta->bindParam(':clave', $clave);
         $consulta->bindParam(':correo', $correo);
         $consulta->bindParam(':rol', $rol);
 
-        // Ejecuta la consulta
         try {
             $consulta->execute();
             session_start();

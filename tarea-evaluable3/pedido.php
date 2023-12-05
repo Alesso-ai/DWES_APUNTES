@@ -28,6 +28,45 @@ function listarPizzas($conn)
 
 session_start();
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST["pizza"]) && isset($_POST["cantidad"])) {
+        $pizza = $_POST["pizza"];
+        $cantidad = $_POST["cantidad"];
+        $id_cliente = $_SESSION["id"];
+        $fecha_pedido = date("Y-m-d H:i:s");
+        $detalle_pedido = "";
+        $total = $_POST["total"];
+        if ($pizza == '0') {
+            echo "Por favor, selecciona una pizza.";
+        } else {
+            if (!isset($_SESSION["pedido"])) {
+                $_SESSION["pedido"] = array();
+            }
+
+            $pizzaIndex = -1;
+            foreach ($_SESSION["pedido"] as $index => $item) {
+                if ($item["pizza"] == $pizza) {
+                    $pizzaIndex = $index;
+                    break;
+                }
+            }
+
+            if ($pizzaIndex != -1) {
+                $_SESSION["pedido"][$pizzaIndex]["cantidad"] += $cantidad;
+            } else {
+                $_SESSION["pedido"][] = array("pizza" => $pizza, "cantidad" => $cantidad);
+            }
+
+            // Insertar la pizza en la tabla pedidos
+            $consulta = $conn->prepare("INSERT INTO pedidos (id_pedido, id_cliente, fecha_pedido, detalle_pedido, total) VALUES (NULL, :id_cliente, NOW(), :detalle_pedido, :total)");
+            $consulta->bindParam(':id_cliente', $id_cliente);
+            $consulta->bindParam(':detalle_pedido', $detalle_pedido);
+            $consulta->bindParam(':total', $total);
+            $consulta->execute();
+        }
+    }
+}
+
 ?>
 
 <!DOCTYPE html>

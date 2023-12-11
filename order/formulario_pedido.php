@@ -31,7 +31,7 @@ $conn = conectarDB();
                 </select> <!-- Agregada etiqueta de cierre para el elemento select -->
             </label> <!-- Agregada etiqueta de cierre para el elemento label -->
         <?php endfor; ?>
-        <button type="submit">Enviar</button> <!-- Agregado botón de envío -->
+        <input type="submit" value="Hacer pedido"> 
     </form>
 </body>
 
